@@ -3,12 +3,15 @@
 #include "freertos/FreeRTOS.h"
 #include "freertos/task.h"
 #include "driver/gpio.h"
+#include "rom/gpio.h"
+// #include "freertos/portmacro.h"
+
+#include "portmacro.h"
 #include "sdkconfig.h"
 #include "esp_log.h"
 #include "esp_task_wdt.h"
 #include "main.h"
 #include "display.h"
-#include "rom/gpio.h"
 
 #define COUNT 10
 #define STACK_SIZE 1024
@@ -19,11 +22,11 @@
    or you can edit the following line and set a number here.
 */
 static uint8_t seg4,seg3,seg2,seg1,flags,temp;	
-// static const char* TAG_A = "Task LCD Updating";
+// static const char* TAG = "Main Module";
+// static const char* TAG1 = "Function";
 
 void app_main() 
 {
-    static const char* TAG = "MainModule";
 
 	GPIO_Init();
 	/* Blink before running */
@@ -42,9 +45,10 @@ void app_main()
     // Send_command(TIMER_EN);
 
 	Clear_display();
-	ESP_LOGI(TAG,"Init was passed");
+	ESP_LOGI("Info MSG","Init was passed");
 
     xTaskCreate(&Display_Update_Loop,"Display_Update_Loop",STACK_SIZE,NULL,1,NULL);
+    xTaskCreate(&Keep_Alive,"Blue_LED",STACK_SIZE,NULL,2,NULL);
 	
     while (1)
    {
@@ -56,17 +60,25 @@ void Display_Update_Loop(void *arg)
 {
 	while (1)
 	{
-	// ESP_LOGI(TAG_A,"LCD update");
 		vTaskDelay(135 / portTICK_PERIOD_MS);
 		Update_display();
+		// ESP_LOGI("Diplay Task","Display Update");		    //Guru Meditation Error: Core  0 panic'ed (LoadProhibited). Exception was unhandled.
+		// ESP_EARLY_LOGI("Diplay Task","Display Update");		// It works
+		// ESP_DRAM_LOGI(TAG,"Display Update");					// It works
+	}
+}
+void Keep_Alive(void *arg)
+{
+	while (1)
+	{
+		vTaskDelay(1500 / portTICK_PERIOD_MS);
+		gpio_set_level(LED, 1);
+		vTaskDelay(35 / portTICK_PERIOD_MS);
+		gpio_set_level(LED, 0);
 	}
 };
-
 void Update_display(void)
 {
-    // static const char* TAG_A = "LCD_Routine";
-	// static uint8_t seg4,seg3,seg2,seg1,flags,temp;	
-	
 	seg1++;
 	temp ++;
 	if (temp == 3)
@@ -140,6 +152,8 @@ void GPIO_Init(void)
     gpio_set_direction(CS, GPIO_MODE_OUTPUT);
     gpio_set_direction(DATA, GPIO_MODE_OUTPUT);
     gpio_set_direction(LED, GPIO_MODE_OUTPUT);
+	// ESP_LOGI(TAG,"GPIO Initialized");
+	// ESP_DRAM_LOGI("Test","GPIO Initialized");
 };
 
 void Beep_Enable(void)

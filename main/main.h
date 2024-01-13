@@ -8,6 +8,7 @@
 #define DATA 5
 
 void Display_Update_Loop(void *arg);
+void Keep_Alive(void *arg);
 void Update_display(void);
 void GPIO_Init(void);
 void Beep_Enable(void);

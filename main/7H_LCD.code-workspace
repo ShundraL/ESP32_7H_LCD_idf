@@ -1,0 +1,16 @@
+{
+	"folders": [
+		{
+			"path": ".."
+		}
+	],
+	"settings": {
+		"files.associations": {
+			"stdio.h": "c",
+			"freertos.h": "c",
+			"portmacro.h": "c",
+			"task.h": "c",
+			"gpio.h": "c"
+		}
+	}
+}
