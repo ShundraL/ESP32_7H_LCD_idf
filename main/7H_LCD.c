@@ -1,15 +1,17 @@
 
 #include <stdio.h>
-#include "freertos/FreeRTOS.h"
-#include "freertos/task.h"
-#include "driver/gpio.h"
-#include "rom/gpio.h"
+#include <freertos/FreeRTOS.h>
+#include <freertos/task.h>
+#include <driver/gpio.h>
+#include <rom/gpio.h>
 // #include "freertos/portmacro.h"
+#include <portmacro.h>
+#include <sdkconfig.h>
+#include <esp_log.h>
+#include <esp_task_wdt.h>
+#include <time.h>
+#include <sys/time.h>
 
-#include "portmacro.h"
-#include "sdkconfig.h"
-#include "esp_log.h"
-#include "esp_task_wdt.h"
 #include "main.h"
 #include "display.h"
 
@@ -22,6 +24,8 @@
    or you can edit the following line and set a number here.
 */
 static uint8_t seg4,seg3,seg2,seg1,flags,temp;	
+time_t current_t;
+struct tm tm_now; 
 // static const char* TAG = "Main Module";
 // static const char* TAG1 = "Function";
 
@@ -45,10 +49,10 @@ void app_main()
     // Send_command(TIMER_EN);
 
 	Clear_display();
-	ESP_LOGI("Info MSG","Init was passed");
+	// ESP_LOGI("Info MSG","Init was passed");
 
     xTaskCreate(&Display_Update_Loop,"Display_Update_Loop",STACK_SIZE,NULL,1,NULL);
-    xTaskCreate(&Keep_Alive,"Blue_LED",STACK_SIZE,NULL,2,NULL);
+    xTaskCreate(&Keep_Alive,"Blue_LED",STACK_SIZE,NULL,1,NULL);
 	
     while (1)
    {
@@ -62,6 +66,8 @@ void Display_Update_Loop(void *arg)
 	{
 		vTaskDelay(135 / portTICK_PERIOD_MS);
 		Update_display();
+	current_t = time(NULL);
+		// Get_time();
 		// ESP_LOGI("Diplay Task","Display Update");		    //Guru Meditation Error: Core  0 panic'ed (LoadProhibited). Exception was unhandled.
 		// ESP_EARLY_LOGI("Diplay Task","Display Update");		// It works
 		// ESP_DRAM_LOGI(TAG,"Display Update");					// It works
@@ -140,6 +146,30 @@ void Update_display(void)
 	}
 };
 
+void Get_time()
+{
+	// current_t = time(NULL);
+	// localtime_r(&current_t, &tm_now);
+	// if (tm_now.tm_sec <= 30)
+	// {
+	// 	if (flags & (1<<DOTS))
+	// 	{
+	// 		flags &=~(1<<DOTS);
+	// 		Send_data(DDOT|MASK_B);
+	// 	}
+	// 	else
+	// 	{
+	// 		flags |=(1<<DOTS);
+	// 		Send_data(DDOT|MASK_A);
+	// 	}
+	// }
+	// if (tm_now.tm_sec == 0)
+	// {
+
+
+	// }
+	// ESP_EARLY_LOGI("time", "hour = %02d, min = %02d, sec= %02d", tm_now.tm_hour, tm_now.tm_min, tm_now.tm_sec); 
+};
 void GPIO_Init(void)
 {
 	gpio_pad_select_gpio(WR);

@@ -68,5 +68,6 @@ void Clear_display(void);
 void Delay(uint16_t delay);
 void Write_segment_data(uint8_t digit, uint8_t segment);
 void Display_Init(void);
+void Get_time(void);
 
 #endif
