@@ -33,9 +33,6 @@ struct display
 	uint8_t seg1;
 }display;
 
-// time_t current_t;
-// static const char* TAG = "Main Module";
-// static const char* TAG1 = "Function";
 
 void app_main() 
 {
@@ -47,7 +44,6 @@ void app_main()
     // Send_command(TIMER_EN);
 
 	Clear_display();
-	// ESP_LOGI("Info MSG","Init was passed");
 
     xTaskCreate(&Display_Update_Loop,"Display_Update_Loop",STACK_SIZE2,NULL,2,NULL);
     xTaskCreate(&Keep_Alive,"Blue_LED",STACK_SIZE,NULL,1,NULL);
@@ -62,14 +58,6 @@ void Display_Update_Loop(void *arg)
 {
 	time_t current_time;
 	struct tm cur_time_str;
-	// struct 
-	// {
-	// 	int min;
-	// 	int sec;
-	// }tmp_time;
-
-	// tmp_time.sec=0;
-	// tmp_time.min=0;
 	bool dot=0;
 
 	while (1)
@@ -79,8 +67,6 @@ void Display_Update_Loop(void *arg)
 		localtime_r(&current_time,&cur_time_str);
 		if(cur_time_str.tm_sec == 0)
 		{
-			// tmp_time.sec = 0;
-			// tmp_time.min = cur_time_str.tm_min;
 			display.seg4 = cur_time_str.tm_hour/10;
 			display.seg3 = cur_time_str.tm_hour%10;
 			display.seg2 = cur_time_str.tm_min/10;
@@ -101,12 +87,6 @@ void Display_Update_Loop(void *arg)
 			Send_data(DDOT|MASK_A);
 		}
 		dot = !dot;
-
-		// ESP_DRAM_LOGI("Display Task","%d02,%d02",cur_time_str.tm_min,cur_time_str.tm_sec);
-		// Get_time();
-		// ESP_LOGI("Diplay Task","Display Update");		    //Guru Meditation Error: Core  0 panic'ed (LoadProhibited). Exception was unhandled.
-		// ESP_EARLY_LOGI("Diplay Task","Display Update");		// It works
-		// ESP_DRAM_LOGI(TAG,"Display Update");					// It works
 	}
 	vTaskDelete(NULL);
 };
@@ -122,30 +102,6 @@ void Keep_Alive(void *arg)
 	vTaskDelete(NULL);
 };
 
-void Get_time()
-{
-	// current_t = time(NULL);
-	// localtime_r(&current_t, &tm_now);
-	// if (tm_now.tm_sec <= 30)
-	// {
-	// 	if (flags & (1<<DOTS))
-	// 	{
-	// 		flags &=~(1<<DOTS);
-	// 		Send_data(DDOT|MASK_B);
-	// 	}
-	// 	else
-	// 	{
-	// 		flags |=(1<<DOTS);
-	// 		Send_data(DDOT|MASK_A);
-	// 	}
-	// }
-	// if (tm_now.tm_sec == 0)
-	// {
-
-
-	// }
-	// ESP_EARLY_LOGI("time", "hour = %02d, min = %02d, sec= %02d", tm_now.tm_hour, tm_now.tm_min, tm_now.tm_sec); 
-};
 void GPIO_Init(void)
 {
 	gpio_pad_select_gpio(WR);
