@@ -33,7 +33,6 @@ struct display
 	uint8_t seg1;
 }display;
 
-
 // time_t current_t;
 // static const char* TAG = "Main Module";
 // static const char* TAG1 = "Function";
@@ -63,14 +62,15 @@ void Display_Update_Loop(void *arg)
 {
 	time_t current_time;
 	struct tm cur_time_str;
-	struct 
-	{
-		int min;
-		int sec;
-	}tmp_time;
+	// struct 
+	// {
+	// 	int min;
+	// 	int sec;
+	// }tmp_time;
 
-	tmp_time.sec=0;
-	tmp_time.min=0;
+	// tmp_time.sec=0;
+	// tmp_time.min=0;
+	bool dot=0;
 
 	while (1)
 	{
@@ -79,24 +79,20 @@ void Display_Update_Loop(void *arg)
 		localtime_r(&current_time,&cur_time_str);
 		if(cur_time_str.tm_sec == 0)
 		{
-			tmp_time.sec = 0;
-			tmp_time.min = cur_time_str.tm_min;
-			display.seg4 = tmp_time.min/10;
-			display.seg3 = tmp_time.min%10;
+			// tmp_time.sec = 0;
+			// tmp_time.min = cur_time_str.tm_min;
+			display.seg4 = cur_time_str.tm_hour/10;
+			display.seg3 = cur_time_str.tm_hour%10;
+			display.seg2 = cur_time_str.tm_min/10;
+			display.seg1 = cur_time_str.tm_min%10;
+
 			Write_segment_data(display.seg4,0);
 			Write_segment_data(display.seg3,1);
-		}
-		if (cur_time_str.tm_sec >= tmp_time.sec)
-		{
-			tmp_time.sec = cur_time_str.tm_sec;
-
-			display.seg2 = tmp_time.sec/10;
-			display.seg1 = tmp_time.sec%10;
-
 			Write_segment_data(display.seg2,2);
-			Write_segment_data(display.seg1,3);
+			Write_segment_data(display.seg1,3);		
 		}
-		if (tmp_time.sec%2)
+
+		if (dot)
 		{
 			Send_data(DDOT|MASK_B);
 		}
@@ -104,6 +100,7 @@ void Display_Update_Loop(void *arg)
 		{
 			Send_data(DDOT|MASK_A);
 		}
+		dot = !dot;
 
 		// ESP_DRAM_LOGI("Display Task","%d02,%d02",cur_time_str.tm_min,cur_time_str.tm_sec);
 		// Get_time();

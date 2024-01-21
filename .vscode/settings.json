@@ -4,6 +4,8 @@
     "idf.portWin": "COM6",
     "files.associations": {
         "stdio.h": "c",
-        "types.h": "c"
+        "types.h": "c",
+        "display.h": "c",
+        "freertos.h": "c"
     }
 }
