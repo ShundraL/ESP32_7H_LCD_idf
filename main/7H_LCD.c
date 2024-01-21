@@ -26,14 +26,6 @@
    or you can edit the following line and set a number here.
 */
 
-struct display
-{	uint8_t seg4;
-	uint8_t seg3;
-	uint8_t seg2;
-	uint8_t seg1;
-}display;
-
-
 void app_main() 
 {
 
@@ -72,10 +64,11 @@ void Display_Update_Loop(void *arg)
 			display.seg2 = cur_time_str.tm_min/10;
 			display.seg1 = cur_time_str.tm_min%10;
 
-			Write_segment_data(display.seg4,0);
-			Write_segment_data(display.seg3,1);
-			Write_segment_data(display.seg2,2);
-			Write_segment_data(display.seg1,3);		
+			// Write_segment_data(display.seg4,0);
+			// Write_segment_data(display.seg3,1);
+			// Write_segment_data(display.seg2,2);
+			// Write_segment_data(display.seg1,3);		
+			Update_display();
 		}
 
 		if (dot)

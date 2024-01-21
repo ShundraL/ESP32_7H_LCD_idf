@@ -8,7 +8,6 @@
 
 #define  DELAY_V    21
 
-
 const uint16_t lcd_codes[][4][7] = 
 {
     {                                                                   // 0
@@ -139,7 +138,6 @@ void Delay(uint16_t delay)
   }
 };
 
-
 void Send_data ( uint16_t data)
 {
     gpio_set_level(WR, 1);
@@ -226,9 +224,24 @@ for (uint8_t k=0; k<127; k++)
 
 void Write_segment_data(uint8_t digit, uint8_t segment)
 {
-
-for (uint8_t i = 0; i < 7; i++)
+    for (uint8_t i = 0; i < 7; i++)
+    {
+        Send_data(lcd_codes[digit][segment][i]);
+    }
+};
+void Update_display(void)
 {
-    Send_data(lcd_codes[digit][segment][i]);
-}
+    uint8_t *pp;
+    pp = &(display.seg4);
+    uint8_t digit;
+
+    for(int8_t segment = 0; segment < 4; segment++)
+    {
+        digit = *pp;
+        for (int8_t i = 0; i < 7; i++)
+        {
+            Send_data(lcd_codes[digit][segment][i]);
+        }
+        pp++;
+    }
 };
