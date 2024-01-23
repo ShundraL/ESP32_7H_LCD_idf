@@ -67,7 +67,7 @@ void Send_data(uint16_t data);
 void Clear_display(void);
 void Delay(uint16_t delay);
 void Write_segment_data(uint8_t digit, uint8_t segment);
-void Update_display(void);
+void Refresh_display(void);
 void Display_Init(void);
 
 #endif

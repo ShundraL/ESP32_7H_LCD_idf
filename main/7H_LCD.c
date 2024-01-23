@@ -26,6 +26,9 @@
    or you can edit the following line and set a number here.
 */
 
+
+union u_tag u;
+
 void app_main() 
 {
 
@@ -59,16 +62,12 @@ void Display_Update_Loop(void *arg)
 		localtime_r(&current_time,&cur_time_str);
 		if(cur_time_str.tm_sec == 0)
 		{
-			display.seg4 = cur_time_str.tm_hour/10;
-			display.seg3 = cur_time_str.tm_hour%10;
-			display.seg2 = cur_time_str.tm_min/10;
-			display.seg1 = cur_time_str.tm_min%10;
+			u.display.seg4 = cur_time_str.tm_hour/10;
+			u.display.seg3 = cur_time_str.tm_hour%10;
+			u.display.seg2 = cur_time_str.tm_min/10;
+			u.display.seg1 = cur_time_str.tm_min%10;
 
-			// Write_segment_data(display.seg4,0);
-			// Write_segment_data(display.seg3,1);
-			// Write_segment_data(display.seg2,2);
-			// Write_segment_data(display.seg1,3);		
-			Update_display();
+			Refresh_display();
 		}
 
 		if (dot)

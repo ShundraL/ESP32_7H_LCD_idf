@@ -6,6 +6,9 @@
         "stdio.h": "c",
         "types.h": "c",
         "display.h": "c",
-        "freertos.h": "c"
+        "freertos.h": "c",
+        "main.h": "c",
+        "task.h": "c",
+        "gpio.h": "c"
     }
 }

@@ -7,12 +7,17 @@
 #define CS   15
 #define DATA 5
 
-static struct display
+struct dspl
 {	uint8_t seg4;
 	uint8_t seg3;
 	uint8_t seg2;
 	uint8_t seg1;
-}display;
+};
+
+extern union u_tag {
+	uint8_t t_array[4];
+	struct dspl display;
+}u;
 
 void Display_Update_Loop(void *arg);
 void Keep_Alive(void *arg);

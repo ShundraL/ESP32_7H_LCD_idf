@@ -1,10 +1,11 @@
 #include <stdio.h>
-#include "display.h"
+#include <driver/gpio.h>
+#include <freertos/FreeRTOS.h>
+#include <freertos/task.h>
+#include <sdkconfig.h>
+#include <esp_log.h>
 #include "main.h"
-#include "driver/gpio.h"
-#include "freertos/FreeRTOS.h"
-#include "freertos/task.h"
-#include "sdkconfig.h"
+#include "display.h"
 
 #define  DELAY_V    21
 
@@ -224,24 +225,21 @@ for (uint8_t k=0; k<127; k++)
 
 void Write_segment_data(uint8_t digit, uint8_t segment)
 {
-    for (uint8_t i = 0; i < 7; i++)
+    for (int8_t i = 0; i < 7; i++)
     {
         Send_data(lcd_codes[digit][segment][i]);
     }
 };
-void Update_display(void)
-{
-    uint8_t *pp;
-    pp = &(display.seg4);
-    uint8_t digit;
 
+void Refresh_display(void)
+{
+    uint8_t data;
     for(int8_t segment = 0; segment < 4; segment++)
     {
-        digit = *pp;
+        data = u.t_array[segment];
         for (int8_t i = 0; i < 7; i++)
         {
-            Send_data(lcd_codes[digit][segment][i]);
+            Send_data(lcd_codes[data][segment][i]);
         }
-        pp++;
     }
 };
